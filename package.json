@@ -1,0 +1,49 @@
+{
+  "name": "@fusionworks/inline-test",
+  "version": "0.0.0",
+  "private": false,
+  "description": "Advanced decorator based testing tool which can replace all unit testings.",
+  "main": "dist/index.js",
+  "scripts": {
+    "rollup": "rollup",
+    "build": "rollup -c",
+    "postbuild": "node lib/copy_package && node lib/copy_readme",
+    "watch": "rollup -cw",
+    "patch": "npm version patch -m \"[skip travis] Release version: %s\"",
+    "prerelease": "npm whoami && npm run patch && npm run build",
+    "release": "npm publish dist --access public",
+    "lint": "tslint -c tslint.json 'src/**/*.ts'",
+    "test": "node lib/test"
+  },
+  "homepage": "https://github.com/FusionWorks/inline-test",
+  "repository": {
+    "url": "https://github.com/FusionWorks/inline-test",
+    "type": "git"
+  },
+  "keywords": [
+    "npm",
+    "tsc",
+    "typescript",
+    "log",
+    "console",
+    "logger",
+    "advanced"
+  ],
+  "author": "GrigoreMe",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^11.12.0",
+    "rollup": "^1.8.0",
+    "rollup-plugin-commonjs": "^9.2.2",
+    "rollup-plugin-json": "^4.0.0",
+    "rollup-plugin-node-resolve": "^4.0.1",
+    "rollup-plugin-sourcemaps": "^0.4.2",
+    "rollup-plugin-typescript": "^1.0.1",
+    "rollup-plugin-typescript2": "^0.20.1",
+    "tslib": "^1.9.3",
+    "tslint": "^5.14.0",
+    "tslint-config-airbnb": "^5.11.1",
+    "typescript": "^3.3.4000"
+  },
+  "dependencies": {}
+}

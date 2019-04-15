@@ -1,0 +1,17 @@
+{
+  "name": "@fusionworks/inline-test-demo",
+  "version": "0.0.0",
+  "private": false,
+  "description": "Demo purpose.",
+  "main": "dist/index.js",
+  "scripts": {
+    "rollup": "rollup",
+    "build": "rollup -c",
+    "watch": "rollup -cw",
+    "test": "cd .. && npm run build && cd demo && npm run build && node dist"
+  },
+  "author": "GrigoreMe",
+  "license": "ISC",
+  "devDependencies": {},
+  "dependencies": {}
+}
