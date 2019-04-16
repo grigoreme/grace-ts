@@ -6,7 +6,7 @@
   "main": "dist/index.js",
   "scripts": {
     "rollup": "rollup",
-    "build": "rollup -c",
+    "build": "rollup -c && node dist",
     "watch": "rollup -cw",
     "test": "cd .. && npm run build && cd demo && npm run build && node dist"
   },

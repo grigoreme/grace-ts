@@ -1,1 +1,1 @@
-export { UnitTest } from './unit.decorator';
+export { UnitTest, UnitConfig, RunTest } from './unit.decorator';
