@@ -6,12 +6,13 @@ if (typeof unitResponse === 'undefined') {
 }
 
 process.on('beforeExit', () => {
-  const isRollup = process.env.npm_lifecycle_event === 'build';
-  if (isRollup) {
-    return;
+  // Get some free space before rendering status, for better focus.
+  if (unitResponse.success.length || unitResponse.error.length) {
+    console.log('\n');
   }
-  unitResponse.success.forEach((log: string) => console.log(log));
-  unitResponse.error.forEach((log: string) => console.error(log));
+
+  console.log(unitResponse.success.join('\n\n'));
+  console.log(unitResponse.error.join('\n\n'));
 });
 
 export * from './decorators/index';

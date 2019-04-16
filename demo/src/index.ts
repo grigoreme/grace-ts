@@ -1,23 +1,23 @@
-import { UnitConfig, RunTest } from '../../dist/index.js';
+import { UnitConfig, UnitTest } from '../../dist/index.js';
 import { config } from './config';
 
 @UnitConfig(config)
 export class ObjectKeys {
   constructor() { }
 
-  @RunTest()
+  @UnitTest()
   objectKeys(obj) {
     return Object.keys(obj);
   }
 
-  @RunTest()
+  @UnitTest()
   charOnlyKeys(obj) {
     return Object.keys(obj).map((key) => {
       return key.replace(/0-9/, '');
     });
   }
 
-  @RunTest()
+  @UnitTest(true)
   isUndefined(someVal) {
     return !someVal;
   }

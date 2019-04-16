@@ -51,13 +51,13 @@ export function Test(
   const result = func.call(context, ...input);
   const failed = JSON.stringify(output) !== JSON.stringify(result);
   const color = failed ? 'red' : 'green';
-  // tslint:disable-next-line: prefer-template
   const pattern = [
     // tslint:disable-next-line: max-line-length
     textDecorate(color, `Unit ${String(testKey)} ${failed ? 'failed' : 'succeed'} for method '${String(propertyKey)}' inside ${SafePath(__filename)}.`),
-    `\t${textDecorate(color, 'Expected:')} ${textDecorate('cyan', JSON.stringify(output))}`,
-    `\t${textDecorate(color, 'Returned:')} ${textDecorate('yellow', JSON.stringify(result))}`,
-  ].join('\n') + '\n';
+    `  ${textDecorate(color, 'Expected:')} ${textDecorate('cyan', JSON.stringify(output))}`,
+    `  ${textDecorate(color, 'Returned:')} ${textDecorate('yellow', JSON.stringify(result))}`,
+  ].join('\n');
+
   if (failed) {
     unitResponse.error.push(pattern);
     return false;
