@@ -1,4 +1,4 @@
-import { UnitConfig, RunTest } from '../../dist';
+import { UnitConfig, RunTest } from '../../dist/index.js';
 import { config } from './config';
 
 @UnitConfig(config)

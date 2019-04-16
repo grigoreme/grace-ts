@@ -1,4 +1,5 @@
 import { SafePath } from './path';
+declare var unitResponse;
 
 function textDecorate(DECORATE, text) {
   const decorate = DECORATE.toLowerCase();
@@ -42,21 +43,26 @@ export function Test(
   OUTPUT: any,
   context: any,
   propertyKey: string | symbol,
+  testKey: string,
 ) {
   const toArray = (item: any) => Array.isArray(item) ? item : [item];
   const input = toArray(INPUT);
   const output = OUTPUT;
   const result = func.call(context, ...input);
-  if (JSON.stringify(output) !== JSON.stringify(result)) {
-    const errorPattern = [
-      // tslint:disable-next-line: max-line-length
-      textDecorate('red', `Unit testing failed for ${String(propertyKey)} inside ${SafePath(__filename)}.`),
-      `\t${textDecorate('red', 'Expected:')} ${textDecorate('cyan', JSON.stringify(output))}`,
-      `\t${textDecorate('red', 'Returned:')} ${textDecorate('yellow', JSON.stringify(result))}`,
-    ];
-    console.log(errorPattern.join('\n'), '\n');
+  const failed = JSON.stringify(output) !== JSON.stringify(result);
+  const color = failed ? 'red' : 'green';
+  // tslint:disable-next-line: prefer-template
+  const pattern = [
+    // tslint:disable-next-line: max-line-length
+    textDecorate(color, `Unit ${String(testKey)} ${failed ? 'failed' : 'succeed'} for method '${String(propertyKey)}' inside ${SafePath(__filename)}.`),
+    `\t${textDecorate(color, 'Expected:')} ${textDecorate('cyan', JSON.stringify(output))}`,
+    `\t${textDecorate(color, 'Returned:')} ${textDecorate('yellow', JSON.stringify(result))}`,
+  ].join('\n') + '\n';
+  if (failed) {
+    unitResponse.error.push(pattern);
     return false;
   }
 
+  unitResponse.success.push(pattern);
   return true;
 }
