@@ -1,31 +1,10 @@
 import { SafePath } from './path';
+import { textDecorate } from './textDecorate';
+import { toArray } from './toArray';
+import { deepEqual } from './differ';
 declare var unitResponse;
-
-function textDecorate(DECORATE, text) {
-  const decorate = DECORATE.toLowerCase();
-  const decorators = {
-    reset: '\x1b[0m',
-    bright: '\x1b[1m',
-    dim: '\x1b[2m',
-    underscore: '\x1b[4m',
-    blink: '\x1b[5m',
-    reverse: '\x1b[7m',
-    hidden: '\x1b[8m',
-    black: '\x1b[30m',
-    red: '\x1b[31m',
-    green: '\x1b[32m',
-    yellow: '\x1b[33m',
-    blue: '\x1b[34m',
-    magenta: '\x1b[35m',
-    cyan: '\x1b[36m',
-    white: '\x1b[37m',
-    cancel: '\x1b[0m',
-  };
-  if (!decorators[decorate]) {
-    return;
-  }
-  return `${decorators[decorate]}${text}${decorators.cancel}`;
-}
+const failColor = 'red';
+const successColor = 'green';
 
 /**
  *
@@ -39,23 +18,47 @@ function textDecorate(DECORATE, text) {
 // tslint:disable-next-line: function-name
 export function Test(
   func: Function,
-  INPUT: any,
-  OUTPUT: any,
+  input: any,
+  output: any,
   context: any,
   propertyKey: string | symbol,
   testKey: string,
 ) {
-  const toArray = (item: any) => Array.isArray(item) ? item : [item];
-  const input = toArray(INPUT);
-  const output = OUTPUT;
-  const result = func.call(context, ...input);
-  const failed = JSON.stringify(output) !== JSON.stringify(result);
-  const color = failed ? 'red' : 'green';
+  let reasons = [];
+  let failed = false;
+
+  const result = func.call(context, ...toArray(input));
+  // Final value mismatch error.
+  if (!deepEqual(output.value, result)) {
+    failed = true;
+    reasons = [
+      ...reasons,
+      textDecorate(failColor, ' Result mismatch.'),
+      `  ${textDecorate(failColor, 'Expected:')} ${textDecorate('cyan', JSON.stringify(output.value))}`,
+      `  ${textDecorate(failColor, 'Returned:')} ${textDecorate('yellow', JSON.stringify(result))}`,
+    ];
+  }
+  // Context mismatch error.
+  if (output.hasOwnProperty('context') && !deepEqual(context, output.context)) {
+    failed = true;
+    // Search for which keys got broken.
+    Object.keys(output.context).forEach((key) => {
+      if (!deepEqual(output.context[key], context[key])) {
+        reasons = [
+          ...reasons,
+          ` ${textDecorate(failColor, 'Context mismatch for')} '${textDecorate('cyan', key)}'${textDecorate(failColor, '.')}`,
+          `  ${textDecorate(failColor, 'Expected:')} ${textDecorate('cyan', JSON.stringify(output.context[key]))}`,
+          `  ${textDecorate(failColor, 'Returned:')} ${textDecorate('yellow', JSON.stringify(context[key]))}`,
+        ];
+      }
+    });
+  }
+
+  const color = failed ? failColor : successColor;
   const pattern = [
     // tslint:disable-next-line: max-line-length
     textDecorate(color, `Unit ${String(testKey)} ${failed ? 'failed' : 'succeed'} for method '${String(propertyKey)}' inside ${SafePath(__filename)}.`),
-    `  ${textDecorate(color, 'Expected:')} ${textDecorate('cyan', JSON.stringify(output))}`,
-    `  ${textDecorate(color, 'Returned:')} ${textDecorate('yellow', JSON.stringify(result))}`,
+    ...reasons,
   ].join('\n');
 
   if (failed) {

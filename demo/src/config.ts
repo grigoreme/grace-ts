@@ -1,33 +1,45 @@
 export const config = {
-  isUndefined: [
+  toBoolean: [
     {
       inputs: [null],
-      output: true,
+      output: {
+        value: true,
+      },
       name: 'The null',
     },
     {
       inputs: [undefined],
-      output: true,
+      output: {
+        value: true,
+      },
       name: 'The undefined',
     },
     {
       inputs: [0],
-      output: true,
+      output: {
+        value: true,
+      },
       name: 'The zero',
     },
     {
       inputs: [false],
-      output: true,
+      output: {
+        value: true,
+      },
       name: 'The false',
     },
     {
       inputs: [true],
-      output: false,
+      output: {
+        value: false,
+      },
       name: 'The true',
     },
     {
       inputs: ['test'],
-      output: false,
+      output: {
+        value: false,
+      },
       name: 'The string',
     },
   ],
@@ -36,7 +48,9 @@ export const config = {
       inputs: [{
         some_key: 'some_value1',
       }],
-      output: ['some_key'],
+      output: {
+        value: ['some_key']
+      },
       name: 'Simple test',
     },
   ],
@@ -45,8 +59,32 @@ export const config = {
       inputs: [{
         some_key: 'some_value',
       }],
-      output: ['some_key'],
+      output: {
+        value: ['some_key'],
+      },
       name: 'Simple test',
+    },
+  ],
+  setLoading: [
+    {
+      name: 'Set loading.',
+      inputs: [],
+      output: {
+        value: undefined,
+        context: { loading: true },
+      },
+      context: { loading: undefined },
+    },
+  ],
+  setUnloading: [
+    {
+      name: 'Unset loading.',
+      inputs: [],
+      output: {
+        value: undefined,
+        context: { loading: true },
+      },
+      context: { loading: undefined },
     },
   ],
 };

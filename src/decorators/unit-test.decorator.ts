@@ -19,9 +19,9 @@ export function UnitTest() {
       if (!config[propertyKey]) {
         return;
       }
-      config[propertyKey].forEach(({ inputs, output, name }, index) => {
+      config[propertyKey].forEach(({ inputs, output, name, context }, index) => {
         const testName = name ? `'${name}'` : `with index ${index}`;
-        Test(target[propertyKey], inputs, output, target, propertyKey, testName);
+        Test(target[propertyKey], inputs, output, context, propertyKey, testName);
       });
     });
 

@@ -12,6 +12,7 @@ process.on('beforeExit', () => {
   }
 
   console.log(unitResponse.success.join('\n\n'));
+  console.log('\n');
   console.log(unitResponse.error.join('\n\n'));
 });
 

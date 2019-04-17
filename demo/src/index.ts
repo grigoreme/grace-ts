@@ -3,6 +3,8 @@ import { config } from './config';
 
 @UnitConfig(config)
 export class ObjectKeys {
+  private loading: boolean;
+
   constructor() { }
 
   @UnitTest()
@@ -17,8 +19,18 @@ export class ObjectKeys {
     });
   }
 
-  @UnitTest(true)
-  isUndefined(someVal) {
+  @UnitTest()
+  toBoolean(someVal) {
     return !someVal;
+  }
+
+  @UnitTest()
+  setLoading() {
+    this.loading = true;
+  }
+
+  @UnitTest()
+  setUnloading() {
+    this.loading = false;
   }
 }
