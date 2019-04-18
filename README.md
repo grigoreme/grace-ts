@@ -1,12 +1,12 @@
-# @FusionWorks/inline-test
+# @FusionWorks/grace-ts
 
-[![GitHub package.json version](https://img.shields.io/github/package-json/v/FusionWorks/inline-test.svg?label=Version)](https://github.com/FusionWorks/inline-test) 
-[![npm downloads](https://img.shields.io/npm/dm/@fusionworks/inline-test.svg)](https://npmjs.org/@fusionworks/inline-test)
-[![Coverage Status](https://coveralls.io/repos/github/grigoreme/inline-test/badge.svg?branch=master)](https://coveralls.io/github/FusionWorks/inline-test?branch=master) 
+[![GitHub package.json version](https://img.shields.io/github/package-json/v/FusionWorks/grace-ts.svg?label=Version)](https://github.com/FusionWorks/grace-ts) 
+[![npm downloads](https://img.shields.io/npm/dm/@fusionworks/grace-ts.svg)](https://npmjs.org/@fusionworks/grace-ts)
+[![Coverage Status](https://coveralls.io/repos/github/grigoreme/grace-ts/badge.svg?branch=master)](https://coveralls.io/github/FusionWorks/grace-ts?branch=master) 
 
 Decorator based unit testing.
 
-`inline-test` is an javascript solution for testing large amount of functions without wasting any extra time on that. The logger was designed to be extremely flexible and light; it doesn't require you to deep learn any framework, just give some dummy inputs and outputs which will be compared on build.
+`grace-ts` is an javascript solution for testing large amount of functions without wasting any extra time on that. The logger was designed to be extremely flexible and light; it doesn't require you to deep learn any framework, just give some dummy inputs and outputs which will be compared on build.
 
 It was built for modern browsers using _TypeScript_.
 
@@ -21,10 +21,10 @@ It was built for modern browsers using _TypeScript_.
 
 ## Installation
 
-To use inline-test in your project install it via [npm](https://www.npmjs.com/package/@fusionworks/inline-test):
+To use grace-ts in your project install it via [npm](https://www.npmjs.com/package/@fusionworks/grace-ts):
 
 ```
-npm i @fusionworks/inline-test --save-dev
+npm i @fusionworks/grace-ts --save-dev
 ```
 
 ## Testing

@@ -1,6 +1,6 @@
 #!/bin/bash
 PACKAGE_VERSION=$(node -p -e "require('./package.json').version")
-REMOTE_VERSION=$(npm show @fusionworks/inline-test version)
+REMOTE_VERSION=$(npm show @fusionworks/grace-ts version)
 LAST_AUTHOR="$(git log -1 --pretty=format:'%an')"
 echo "Local version: $PACKAGE_VERSION"
 echo "Remote version: $REMOTE_VERSION"
@@ -13,8 +13,8 @@ elif [[ $TRAVIS_PULL_REQUEST = false && $TRAVIS_BRANCH == "master" ]]; then
   git checkout master
   git pull origin master
   npm run release
-  # https://github.com/FusionWorks/inline-test.git
-  git push "https://${GITHUB_TOKEN}@github.com/grigoreme/inline-test.git" master
+  # https://github.com/FusionWorks/grace-ts.git
+  git push "https://${GITHUB_TOKEN}@github.com/grigoreme/grace-ts.git" master
 
 	git checkout -
 else

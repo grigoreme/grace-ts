@@ -1,5 +1,5 @@
 {
-  "name": "@fusionworks/inline-test",
+  "name": "@fusionworks/grace-ts",
   "version": "0.0.0",
   "private": false,
   "description": "Advanced decorator based testing tool which can replace all unit testings.",
@@ -15,9 +15,9 @@
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
     "test": "node lib/test"
   },
-  "homepage": "https://github.com/FusionWorks/inline-test",
+  "homepage": "https://github.com/FusionWorks/grace-ts",
   "repository": {
-    "url": "https://github.com/FusionWorks/inline-test",
+    "url": "https://github.com/FusionWorks/grace-ts",
     "type": "git"
   },
   "keywords": [
