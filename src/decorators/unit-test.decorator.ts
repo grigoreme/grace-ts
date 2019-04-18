@@ -20,7 +20,7 @@ export function UnitTest() {
         return;
       }
       config[propertyKey].forEach(({ inputs, output, name, context }, index) => {
-        const testName = name ? `'${name}'` : `with index ${index}`;
+        const testName = name || index;
         Test(target[propertyKey], target.constructor.name, inputs, output, context, propertyKey, testName);
       });
     });

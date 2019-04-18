@@ -37,7 +37,7 @@ export function Test(
     failed = true;
     reasons = [
       ...reasons,
-      fail(' Result mismatch.'),
+      fail('Result mismatch.'),
       `  ${fail('Expected:')} ${cyan(JSON.stringify(output.value))}`,
       `  ${fail('Returned:')} ${yellow(JSON.stringify(result))}`,
     ];
@@ -58,19 +58,21 @@ export function Test(
     });
   }
 
-  const color = failed ? fail : success;
-  const status = `Unit ${String(testKey)} ${failed ? 'failed' : 'succeed'}`;
-  const pattern = [
-    // tslint:disable-next-line: max-line-length
-    `${color(`${status} from method '`)}${cyan(String(propertyKey))}${color(`' inside ${className}.`)}`,
-    ...reasons,
-  ].join('\n');
+  const unitResult = {
+    container: className,
+    name: testKey,
+    output: reasons,
+    succeed: !failed,
+  };
 
-  if (failed) {
-    unitResponse.error.push(pattern);
-    return false;
+  if (!unitResponse[className]) {
+    unitResponse[className] = {};
+  }
+  if (!unitResponse[className][propertyKey]) {
+    unitResponse[className][propertyKey] = [];
   }
 
-  unitResponse.success.push(pattern);
-  return true;
+  unitResponse[className][propertyKey].push(unitResult);
+
+  return !failed;
 }
