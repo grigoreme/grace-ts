@@ -21,7 +21,7 @@ export function UnitTest() {
       }
       config[propertyKey].forEach(({ inputs, output, name, context }, index) => {
         const testName = name ? `'${name}'` : `with index ${index}`;
-        Test(target[propertyKey], inputs, output, context, propertyKey, testName);
+        Test(target[propertyKey], target.constructor.name, inputs, output, context, propertyKey, testName);
       });
     });
 

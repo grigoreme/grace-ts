@@ -7,7 +7,7 @@ import { Test } from '../helpers/test';
 export function UnitTestWith(userInput: any, userOutput: any, keyName: string, context: any = {}) {
   return function (target?: any, propertyKey?: string | symbol, descriptor?: PropertyDescriptor) {
     const testName = keyName ? `'${keyName}'` : 'with no name';
-    Test(descriptor.value, userInput, userOutput, context, propertyKey, testName);
+    Test(descriptor.value, target.constructor.name, userInput, userOutput, context, propertyKey, testName);
     return descriptor;
   };
 }

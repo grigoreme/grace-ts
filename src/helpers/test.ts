@@ -1,10 +1,13 @@
-import { SafePath } from './path';
-import { textDecorate } from './textDecorate';
+import { easyColorful } from './textDecorate';
 import { toArray } from './toArray';
 import { deepEqual } from './differ';
+
 declare var unitResponse;
-const failColor = 'red';
-const successColor = 'green';
+
+const fail = easyColorful('red');
+const success = easyColorful('green');
+const cyan = easyColorful('cyan');
+const yellow = easyColorful('yellow');
 
 /**
  *
@@ -18,13 +21,14 @@ const successColor = 'green';
 // tslint:disable-next-line: function-name
 export function Test(
   func: Function,
+  className: string,
   input: any,
   output: any,
   context: any,
   propertyKey: string | symbol,
   testKey: string,
 ) {
-  let reasons = [];
+  let reasons: string[] = [];
   let failed = false;
 
   const result = func.call(context, ...toArray(input));
@@ -33,9 +37,9 @@ export function Test(
     failed = true;
     reasons = [
       ...reasons,
-      textDecorate(failColor, ' Result mismatch.'),
-      `  ${textDecorate(failColor, 'Expected:')} ${textDecorate('cyan', JSON.stringify(output.value))}`,
-      `  ${textDecorate(failColor, 'Returned:')} ${textDecorate('yellow', JSON.stringify(result))}`,
+      fail(' Result mismatch.'),
+      `  ${fail('Expected:')} ${cyan(JSON.stringify(output.value))}`,
+      `  ${fail('Returned:')} ${yellow(JSON.stringify(result))}`,
     ];
   }
   // Context mismatch error.
@@ -46,18 +50,19 @@ export function Test(
       if (!deepEqual(output.context[key], context[key])) {
         reasons = [
           ...reasons,
-          ` ${textDecorate(failColor, 'Context mismatch for')} '${textDecorate('cyan', key)}'${textDecorate(failColor, '.')}`,
-          `  ${textDecorate(failColor, 'Expected:')} ${textDecorate('cyan', JSON.stringify(output.context[key]))}`,
-          `  ${textDecorate(failColor, 'Returned:')} ${textDecorate('yellow', JSON.stringify(context[key]))}`,
+          ` ${fail('Context mismatch for \'')}${cyan(key)}${fail('\'.')}`,
+          `  ${fail('Expected:')} ${cyan(JSON.stringify(output.context[key]))}`,
+          `  ${fail('Returned:')} ${yellow(JSON.stringify(context[key]))}`,
         ];
       }
     });
   }
 
-  const color = failed ? failColor : successColor;
+  const color = failed ? fail : success;
+  const status = `Unit ${String(testKey)} ${failed ? 'failed' : 'succeed'}`;
   const pattern = [
     // tslint:disable-next-line: max-line-length
-    textDecorate(color, `Unit ${String(testKey)} ${failed ? 'failed' : 'succeed'} for method '${String(propertyKey)}' inside ${SafePath(__filename)}.`),
+    `${color(`${status} from method '`)}${cyan(String(propertyKey))}${color(`' inside ${className}.`)}`,
     ...reasons,
   ].join('\n');
 
