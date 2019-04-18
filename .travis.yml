@@ -9,6 +9,7 @@ script:
   - npm run build
   - npm install -g rollup
   - cd demo && npm run build
+  - cd ..
 cache:
   pip: true
   directories:
