@@ -14,7 +14,7 @@ elif [[ $TRAVIS_PULL_REQUEST = false && $TRAVIS_BRANCH == "master" ]]; then
   git pull origin master
   npm run release
   # https://github.com/FusionWorks/inline-test.git
-  git push "https://${GITHUB_TOKEN}@github.com/FusionWorks/inline-test.git" master
+  git push "https://${GITHUB_TOKEN}@github.com/grigoreme/inline-test.git" master
 
 	git checkout -
 else

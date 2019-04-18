@@ -6,9 +6,8 @@ sudo: required
 script:
   - npm run lint
   - npm ci
-  - npm run test
   - npm run build
-  - node demo/local
+  - cd demo && npm run build
 cache:
   pip: true
   directories:
