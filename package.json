@@ -1,6 +1,6 @@
 {
   "name": "@fusionworks/grace-ts",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "private": false,
   "description": "Advanced decorator based testing tool which can replace all unit testings.",
   "main": "dist/index.js",
