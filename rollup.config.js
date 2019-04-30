@@ -9,7 +9,7 @@ const pkg = require('./package.json');
 const entryFile = 'index'
 
 export default {
-  input: `${entryFile}.ts`,
+  input: `src/${entryFile}.ts`,
   output: [
     { file: pkg.main, name: entryFile, format: 'umd', sourcemap: true },
     { file: pkg.module, format: 'es', sourcemap: true },

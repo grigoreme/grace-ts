@@ -1,4 +1,28 @@
 export const config = {
+  constructorArgs: [true],
+  loading: [
+    {
+      name: 'Loading Getter init',
+      inputs: [],
+      output: {
+        context: { loading: true },
+        errorMsg: 'No default loading state defined.',
+        severity: 'log',
+      },
+    },
+  ],
+  lazyReset: [
+    {
+      name: 'Reseting loading status',
+      inputs: [],
+      output: {
+        context: { loading: true },
+        errorMsg: 'No default loading state defined.',
+        // showThrown: false,
+        severity: 'log',
+      },
+    },
+  ],
   toBoolean: [
     {
       inputs: [null],
@@ -71,9 +95,7 @@ export const config = {
       inputs: [],
       output: {
         value: undefined,
-        context: { loading: true },
       },
-      context: { loading: undefined },
     },
   ],
   setUnloading: [
@@ -82,9 +104,7 @@ export const config = {
       inputs: [],
       output: {
         value: undefined,
-        context: { loading: true },
       },
-      context: { loading: undefined },
     },
   ],
 };

@@ -4,10 +4,14 @@ import { deepEqual } from './differ';
 
 declare var unitResponse;
 
-const fail = easyColorful('red');
-const success = easyColorful('green');
 const cyan = easyColorful('cyan');
-const yellow = easyColorful('yellow');
+const magenta = easyColorful('magenta');
+
+// Severity checks here
+const error = easyColorful('red');
+const warn = easyColorful('yellow');
+const log = easyColorful('white');
+const severityTypes = { log, warn, error };
 
 /**
  *
@@ -19,7 +23,7 @@ const yellow = easyColorful('yellow');
  * @param propertyKey Method name.
  */
 // tslint:disable-next-line: function-name
-export function Test(
+export async function Test(
   func: Function,
   className: string,
   input: any,
@@ -27,33 +31,71 @@ export function Test(
   context: any,
   propertyKey: string | symbol,
   testKey: string,
+  targetConfig?: { [key: string]: any },
 ) {
   let reasons: string[] = [];
   let failed = false;
+  let thrown = false;
 
-  const result = func.call(context, ...toArray(input));
-  // Final value mismatch error.
-  if (!deepEqual(output.value, result)) {
-    failed = true;
+  const severity = targetConfig.output.severity || 'error';
+  const severityColor = severityTypes.hasOwnProperty(severity) ? severityTypes[severity] : error;
+
+  const failByMessage = () => {
     reasons = [
       ...reasons,
-      fail('Result mismatch.'),
-      `  ${fail('Expected:')} ${cyan(JSON.stringify(output.value))}`,
-      `  ${fail('Returned:')} ${yellow(JSON.stringify(result))}`,
+      `${severityColor('Failed with message: ')} ${magenta(JSON.stringify(output.errorMsg))}`,
     ];
-  }
-  // Context mismatch error.
-  if (output.hasOwnProperty('context') && !deepEqual(context, output.context)) {
-    failed = true;
-    // Search for which keys got broken.
-    Object.keys(output.context).forEach((key) => {
-      if (!deepEqual(output.context[key], context[key])) {
+  };
+
+  let result = func.call(context, ...toArray(input));
+  if (result && typeof result.then === 'function') {
+    try {
+      result = await result;
+    } catch (e) {
+      failed = true;
+      thrown = true;
+
+      if (output.showThrown !== false) {
         reasons = [
           ...reasons,
-          ` ${fail('Context mismatch for \'')}${cyan(key)}${fail('\'.')}`,
-          `  ${fail('Expected:')} ${cyan(JSON.stringify(output.context[key]))}`,
-          `  ${fail('Returned:')} ${yellow(JSON.stringify(context[key]))}`,
+          `${severityColor('Error thrown:')} ${magenta(JSON.stringify(e))}`,
         ];
+      } else {
+        failByMessage();
+      }
+    }
+  }
+
+  // Final value mismatch error.
+  if (!thrown && output.hasOwnProperty('value') && !deepEqual(output.value, result)) {
+    failed = true;
+    if (!output.errorMsg) {
+      reasons = [
+        ...reasons,
+        severityColor('Result mismatch.'),
+        ` ${severityColor('Expected:')} ${cyan(JSON.stringify(output.value))}`,
+        ` ${severityColor('Returned:')} ${magenta(JSON.stringify(result))}`,
+      ];
+    } else {
+      failByMessage();
+    }
+  }
+  // Context mismatch error.
+  if (!thrown && output.hasOwnProperty('context') && !deepEqual(context, output.context)) {
+    // Search for unmatched keys only.
+    Object.keys(output.context).forEach((key) => {
+      if (!deepEqual(output.context[key], context[key])) {
+        failed = true;
+        if (!output.errorMsg) {
+          reasons = [
+            ...reasons,
+            `${severityColor('Context mismatch for \'')}${cyan(key)}${severityColor('\'.')}`,
+            ` ${severityColor('Expected:')} ${cyan(JSON.stringify(output.context[key]))}`,
+            ` ${severityColor('Returned:')} ${magenta(JSON.stringify(context[key]))}`,
+          ];
+        } else {
+          failByMessage();
+        }
       }
     });
   }
@@ -63,6 +105,7 @@ export function Test(
     name: testKey,
     output: reasons,
     succeed: !failed,
+    customName: !targetConfig.name,
   };
 
   if (!unitResponse[className]) {

@@ -16,12 +16,32 @@ export function UnitTest() {
     // Only after that will be able to gather injected into class metadata.
     setTimeout(() => {
       const config = target.constructor.prototype['__CONFIGURATION__'];
+      const instance = target.constructor.prototype['__INSTANCE__'];
       if (!config[propertyKey]) {
         return;
       }
-      config[propertyKey].forEach(({ inputs, output, name, context }, index) => {
-        const testName = name || index;
-        Test(target[propertyKey], target.constructor.name, inputs, output, context, propertyKey, testName);
+
+      // As js returns object without getters/setters i should gather them somehow. Now they are stored only inside prototype.
+      // const gettersSetters = Object.getOwnPropertyNames(target.constructor.prototype).map((proto) => {
+      //   return { name: proto, value: instance[proto] };
+      // });
+
+      config[propertyKey].forEach((targetConfig, index) => {
+        const { inputs, output, name, context } = targetConfig;
+        const testName = name || `Case ${index}`;
+        let targetFunc = target[propertyKey];
+
+        if (!targetFunc) {
+          if (typeof descriptor.get === 'function') {
+            targetFunc = descriptor.get;
+          } else if (typeof descriptor.set === 'function') {
+            targetFunc = descriptor.set;
+          } else {
+            throw new Error(`Missing call for ${name || target.constructor.name}`);
+          }
+        }
+
+        Test(targetFunc, target.constructor.name, inputs, output, instance || context, propertyKey, testName, targetConfig);
       });
     });
 

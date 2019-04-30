@@ -1,6 +1,6 @@
 import { easyColorful } from './helpers/textDecorate';
 
-declare var unitResponse: { [key: string]: { [key: string]: { container: string, output: string[], succeed: boolean, name: string }[] } };
+declare var unitResponse: { [key: string]: { [key: string]: { container: string, output: string[], succeed: boolean, name: string, customName: boolean }[] } };
 // Hacky but i need it this way to work.
 if (typeof unitResponse === 'undefined') {
   // tslint:disable-next-line: prefer-const, no-var-keyword
@@ -23,10 +23,13 @@ process.on('beforeExit', () => {
       });
     });
     const emoji = (status: boolean) => status ? green('✅') : red('❌');
-    const pads = (count: number) => {
+    const pads = (count: number, padType = '  ') => {
+      if (count === 0) {
+        return '';
+      }
       let paddings = '';
-      for (let i = 0; i <= count; i += 1) {
-        paddings += '  ';
+      for (let i = 0; i < count; i += 1) {
+        paddings += padType;
       }
       return paddings;
     };
@@ -41,10 +44,25 @@ process.on('beforeExit', () => {
       console.log(`${pads(1)} ${emoji(methodSucceed)} ${methodName}`);
 
       method.forEach((test) => {
-        console.log(`${pads(2)} ${emoji(test.succeed)} ${test.name}`);
+        const isSingleAndUnnamed = !(method.length === 1 && test.customName);
+        if (isSingleAndUnnamed) {
+          console.log(`${pads(2)} ${emoji(test.succeed)} ${test.name}`);
+        }
+
         if (!test.succeed) {
-          const output = test.output.map((str: string) => `${pads(3)} ${str}`);
-          console.log(output.join('\n'));
+          const currentPads = isSingleAndUnnamed ? 2 : 3;
+          const output = test.output.map((str: string) => `${pads(currentPads)} ${str}`);
+
+          const caseResult = output
+            .map((txt) => {
+              if (isSingleAndUnnamed) {
+                return `${pads(1)} ${txt}`;
+              }
+
+              return `${pads(3)}${txt.trim()}`;
+            }).join('\n');
+
+          console.log(caseResult);
         }
       });
     });

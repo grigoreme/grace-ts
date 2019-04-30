@@ -6,8 +6,8 @@ import { Test } from '../helpers/test';
 // tslint:disable-next-line: function-name
 export function UnitTestWith(userInput: any, userOutput: any, keyName: string, context: any = {}) {
   return function (target?: any, propertyKey?: string | symbol, descriptor?: PropertyDescriptor) {
-    const testName = keyName || 'no name';
-    Test(descriptor.value, target.constructor.name, userInput, userOutput, context, propertyKey, testName);
+    Test(descriptor.value, target.constructor.name, userInput, userOutput, context, propertyKey, keyName);
+
     return descriptor;
   };
 }
